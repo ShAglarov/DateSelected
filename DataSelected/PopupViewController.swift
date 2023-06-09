@@ -61,33 +61,34 @@ class PopupViewController: UIViewController {
         let currentDate = Date()
         
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: currentDate, to: chosenDate)
-        guard let dayDifference = components.day else { return }
+        let components = calendar.dateComponents([.year, .month, .day], from: currentDate, to: chosenDate)
+        
         var dateString = String()
         
-        switch dayDifference {
-        case 0:
-            dateString = "today"
-        case 1:
-            dateString = "tomorrow"
-        case 2:
-            dateString = "day after tomorrow"
-        case 3:
-            dateString = "after three days"
-        case 4:
-            dateString = "after four days"
-        case 5:
-            dateString = "after five days"
-        case 6:
-            dateString = "after six days"
-        case 7:
-            dateString = "after seven days"
-        default:
-            dateString = "\(dayDifference) days"
+        let years = components.year ?? 0
+        let months = components.month ?? 0
+        let days = components.day ?? 0
+        
+        if years > 0 {
+            dateString += "\(years) year" + (years > 1 ? "s" : "")
+            if months > 0 || days > 0 {
+                dateString += ", "
+            }
         }
-
-        onButtonTapped?(textView.text
-            .replacingOccurrences(of: "{date}", with: dateString), selectedDateString)
+        if months > 0 {
+            dateString += "\(months) month" + (months > 1 ? "s" : "")
+            if days > 0 {
+                dateString += " and "
+            }
+        }
+        if days > 0 {
+            dateString += "\(days) day" + (days > 1 ? "s" : "")
+        }
+        if years == 0 && months == 0 && days == 0 {
+            dateString = "Today"
+        }
+        
+        onButtonTapped?(textView.text.replacingOccurrences(of: "{date}", with: dateString), selectedDateString)
         
         self.dismiss(animated: true, completion: nil)
     }
