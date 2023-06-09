@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     
     private let textTodayLbl: UILabel = {
         let label = UILabel()
-        label.text = "Today"
+        label.text = "Сегодня"
         label.textColor = .white
         label.font = UIFont(name: "Helvetica-Bold", size: 30)
         
@@ -57,7 +57,7 @@ class ViewController: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont(name: "Helvetica-Bold", size: 30)
-        label.text = "Start in three days"
+        label.text = "Старт через"
         return label
     }()
     

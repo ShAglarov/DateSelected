@@ -27,7 +27,7 @@ class PopupViewController: UIViewController {
         textView.layer.cornerRadius = 5
         textView.backgroundColor = UIColor.darkGray
         // Добавляем начальный текст
-        let mainString = "There will be a party in "
+        let mainString = "Будет вечеринка через "
         let highlightString = "{date}"
         
         let attributedMainString = NSMutableAttributedString(string: mainString)
@@ -45,7 +45,7 @@ class PopupViewController: UIViewController {
     
     let setBtn: UIButton = {
         let button = UIButton()
-        button.setTitle("Set", for: .normal)
+        button.setTitle("Установить", for: .normal)
         button.backgroundColor = .blue
         button.layer.cornerRadius = 5
         return button
@@ -69,24 +69,20 @@ class PopupViewController: UIViewController {
         let months = components.month ?? 0
         let days = components.day ?? 0
         
+        let yearsEnding = (years % 10 == 1 && years % 100 != 11) ? "год" : (years % 10 >= 2 && years % 10 <= 4 && (years % 100 < 10 || years % 100 >= 20) ? "года" : "лет")
+        let monthsEnding = (months % 10 == 1 && months % 100 != 11) ? "месяц" : (months % 10 >= 2 && months % 10 <= 4 && (months % 100 < 10 || months % 100 >= 20) ? "месяца" : "месяцев")
+        let daysEnding = (days % 10 == 1 && days % 100 != 11) ? "день" : (days % 10 >= 2 && days % 10 <= 4 && (days % 100 < 10 || days % 100 >= 20) ? "дня" : "дней")
+        
         if years > 0 {
-            dateString += "\(years) year" + (years > 1 ? "s" : "")
-            if months > 0 || days > 0 {
-                dateString += ", "
-            }
+            dateString += "\(years) \(yearsEnding) "
         }
         if months > 0 {
-            dateString += "\(months) month" + (months > 1 ? "s" : "")
-            if days > 0 {
-                dateString += " and "
-            }
+            dateString += "\(months) \(monthsEnding) "
         }
         if days > 0 {
-            dateString += "\(days) day" + (days > 1 ? "s" : "")
+            dateString += "\(days) \(daysEnding) "
         }
-        if years == 0 && months == 0 && days == 0 {
-            dateString = "Today"
-        }
+        dateString = (years == 0 && months == 0 && days == 0) ? "Сегодня" : dateString
         
         onButtonTapped?(textView.text.replacingOccurrences(of: "{date}", with: dateString), selectedDateString)
         
