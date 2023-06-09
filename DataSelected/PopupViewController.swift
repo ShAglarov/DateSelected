@@ -52,40 +52,44 @@ class PopupViewController: UIViewController {
     }()
     
     @objc func buttonTapped() {
-        
+
         let chosenDate = datePicker.date
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d.MM"
         let selectedDateString = dateFormatter.string(from: chosenDate)
-        
+
         let currentDate = Date()
-        
+
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: currentDate, to: chosenDate)
-        
+
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .spellOut
+        numberFormatter.locale = Locale(identifier: "ru_RU")
+
         var dateString = String()
-        
-        let years = components.year ?? 0
-        let months = components.month ?? 0
-        let days = components.day ?? 0
-        
-        let yearsEnding = (years % 10 == 1 && years % 100 != 11) ? "год" : (years % 10 >= 2 && years % 10 <= 4 && (years % 100 < 10 || years % 100 >= 20) ? "года" : "лет")
-        let monthsEnding = (months % 10 == 1 && months % 100 != 11) ? "месяц" : (months % 10 >= 2 && months % 10 <= 4 && (months % 100 < 10 || months % 100 >= 20) ? "месяца" : "месяцев")
-        let daysEnding = (days % 10 == 1 && days % 100 != 11) ? "день" : (days % 10 >= 2 && days % 10 <= 4 && (days % 100 < 10 || days % 100 >= 20) ? "дня" : "дней")
-        
-        if years > 0 {
-            dateString += "\(years) \(yearsEnding) "
+
+        if let years = components.year, years > 0 {
+            let yearsEnding = (years % 10 == 1 && years % 100 != 11) ? "год" : (years % 10 >= 2 && years % 10 <= 4 && (years % 100 < 10 || years % 100 >= 20) ? "года" : "лет")
+            dateString += "\(numberFormatter.string(from: NSNumber(value: years))!) \(yearsEnding) "
         }
-        if months > 0 {
-            dateString += "\(months) \(monthsEnding) "
+
+        if let months = components.month, months > 0 {
+            let monthsEnding = (months % 10 == 1 && months % 100 != 11) ? "месяц" : (months % 10 >= 2 && months % 10 <= 4 && (months % 100 < 10 || months % 100 >= 20) ? "месяца" : "месяцев")
+            dateString += "\(numberFormatter.string(from: NSNumber(value: months))!) \(monthsEnding) "
         }
-        if days > 0 {
-            dateString += "\(days) \(daysEnding) "
+
+        if let days = components.day, days > 0 {
+            let daysEnding = (days % 10 == 1 && days % 100 != 11) ? "день" : (days % 10 >= 2 && days % 10 <= 4 && (days % 100 < 10 || days % 100 >= 20) ? "дня" : "дней")
+            dateString += "\(numberFormatter.string(from: NSNumber(value: days))!) \(daysEnding) "
         }
-        dateString = (years == 0 && months == 0 && days == 0) ? "Сегодня" : dateString
-        
+
+        if dateString.isEmpty {
+            dateString = "Сегодня"
+        }
+
         onButtonTapped?(textView.text.replacingOccurrences(of: "{date}", with: dateString), selectedDateString)
-        
+
         self.dismiss(animated: true, completion: nil)
     }
     
